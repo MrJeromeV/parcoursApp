@@ -1,0 +1,12 @@
+li.reddot {
+  color: red; /* bullet color */
+}
+li.bluedot {
+  color: dodgerblue; /* bullet color */
+}
+li.whitedot {
+  color: Gainsboro ; /* bullet color */
+}
+li span {
+  color: black; /* text color */
+}
