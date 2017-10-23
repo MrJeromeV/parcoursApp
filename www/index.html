@@ -68,11 +68,12 @@ under the License.
                         <input name="newparcours_nom" id="newparcours_nom" value="" placeholder="nom" data-theme="a" type="text" required>
                         <label for="select_newparcours_type" class="ui-hidden-accessibleZ">Type de parcours:</label>
                         <select id='select_newparcours_type' nom='select_newparcours_type' data-theme='a'>
-                            <option value="Nature21">Nature 21 cibles</option>
-                            <option value="Nature42">Nature 42 cibles</option>
+                            <!--<option value="nat21">Nature 21 cibles</option>
+                            <option value="nat42">Nature 42 cibles</option>-->
                         </select>
                     </form>
                     <a id='close_newparcours_dialog' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
+                    <a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
                 </div>
             </div>
 
@@ -96,16 +97,21 @@ under the License.
     <div data-role="page" id="parcours" data-theme="a">
 
         <div data-role="panel" id="cible_panel" data-position="left" data-display="overlay" data-theme="a" data-dismissible="false" data-swipe-close="false">
-            <h2><span id="cible_num">Cible</span></h2>
-            <select>
-                <option value="GG">Gros Gibier</option>
+            <h2>CIBLE <span id="cible_num"></span></h2>
+            <select id='select_categorie'>
+                <!--<option value="GG">Gros Gibier</option>
                 <option value="MG">Moyen Gibier</option>
                 <option value="PG">Petit Gibier</option>
-                <option value="PA">Petit Animal</option>
+                <option value="PA">Petit Animal</option>-->
             </select>
-            <input type='number' id='dist_rouge_"+i+"' min='0' max='40' onchange='verif()'></input>
-            <input type='number' id='dist_bleu_"+i+"' min='0' max='35' onchange='verif()'></input>
-            <input type='number' id='dist_blanc_"+i+"' min='0' max='30' onchange='verif()'></input>
+            <ul>
+            <li class='reddot'><span><input type='number' id='dist_rouge' min='0' max='40'></input></span></li>
+            <li class='bluedot'><span><input type='number' id='dist_bleu' min='0' max='35'></input></span></li>
+            <li class='whitedot'><span><input type='number' id='dist_blanc' min='0' max='30'></input></span></li>
+        </ul>
+        <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
+        <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
+        <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
         </div>
 
         <div data-role="header">
@@ -113,7 +119,8 @@ under the License.
         </div><!-- /header -->
         <div role="main" class="ui-content" id="cibles">
             <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='b'></ul>
-            <p><a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Back to page "one"</a></p>
+            <p><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Sauver</a>
+            <a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Fermer</a></p>
         </div><!-- /content -->
     </div>
 
