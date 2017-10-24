@@ -92,11 +92,11 @@ under the License.
             <h2>CIBLE <span id="cible_num"></span></h2>
             <select id='select_categorie'>
             </select>
-            <ul>
-                <li class='reddot'><span><input type='number' id='dist_rouge' min='0' max='40'></input></span></li>
-                <li class='bluedot'><span><input type='number' id='dist_bleu' min='0' max='35'></input></span></li>
-                <li class='whitedot'><span><input type='number' id='dist_blanc' min='0' max='30'></input></span></li>
-            </ul>
+            <div id="distances" class="ui-field-contain">
+                <input type='number' id='dist_rouge' min='5' max='40' class='red_input'/>
+                <input type='number' id='dist_bleu' min='5' max='35' class='red_input'/>
+                <input type='number' id='dist_blanc' min='5' max='30' class='red_input'/>
+            </div>
             <p id="info_cible"></p>
             <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
             <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>

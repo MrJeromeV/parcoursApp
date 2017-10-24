@@ -1,12 +1,57 @@
-li.reddot {
-  color: red; /* bullet color */
-}
-li.bluedot {
-  color: dodgerblue; /* bullet color */
-}
-li.whitedot {
-  color: Gainsboro ; /* bullet color */
-}
 li span {
   color: black; /* text color */
+}
+
+#distances ul{list-style-type:none;}
+#distances ul li{display:inline;}
+.ui-input-text{width:100%;}
+#distances img {vertical-align:super;}
+
+.dist_rouge {
+    display:inline-block;
+    background-image: url('../img/rouge.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
+}
+
+.dist_bleu {
+    display:inline-block;
+    background-image: url('../img/bleu.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
+}
+
+.dist_blanc {
+    display:inline-block;
+    background-image: url('../img/blanc.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
+}
+
+#dist_rouge {
+    background-image: url('../img/rouge.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
+}
+#dist_bleu {
+    background-image: url('../img/bleu.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
+}
+#dist_blanc {
+    background-image: url('../img/blanc.png');
+    background-repeat: no-repeat;
+    text-indent: 20px;
+    background-position: 8px;
+    background-size: 5px 18px;
 }

@@ -107,10 +107,10 @@ function fillPage()
         var n=i+1;
         $("#liste_cibles").append("<li><a id='cible_link_"+n+"''>"
         +"<h2>"+n+"</h2>"
-        +"<div><ul id='liste_dist_"+n+"'>"
-        +"<li class='reddot'><span id='rouge_"+n+"'>" + cible.rouge + "</span></li>"
-        +"<li class='bluedot'><span id='bleu_"+n+"'>" + cible.bleu + "</span></li>"
-        +"<li class='whitedot'><span id='blanc_"+n+"'>" + cible.blanc + "</span></li>"
+        +"<div><ul id='liste_dist_"+n+"' style='list-style: none;'>"
+        +"<li><span id='rouge_"+n+"' class='dist_rouge'>" + cible.rouge + "</span></li>"
+        +"<li><span id='bleu_"+n+"' class='dist_bleu'>" + cible.bleu + "</span></li>"
+        +"<li><span id='blanc_"+n+"' class='dist_blanc'>" + cible.blanc + "</span></li>"
         +"</ul></div>"
         +"<input type='hidden' id='info_"+n+"'></input>"
         +"<p class='ui-li-aside'><strong><span id='cat_"+n+"'>"+nomCategorie+"</span> <span id='numcat_"+n+"'></span></strong></p>"
@@ -193,7 +193,9 @@ function saveCible()
     $("#rouge_" + numCible).html(rouge);
     $("#bleu_" + numCible).html(bleu);
     $("#blanc_" + numCible).html(blanc);
-    $("#cat_" + numCible).html(categoriesMap.get(categorie).nom);
+    if(categorie != null) {
+        $("#cat_" + numCible).html(categoriesMap.get(categorie).nom);
+    }
     $("#liste_cibles").listview( "refresh" );
 }
 
@@ -222,7 +224,7 @@ function setValidators()
 function verifCible(index)
 {
     var categorie = parcours.cibles[index].categorie;
-    if(categorie == '') return;
+    if(categorie == '' || categorie == null) return;
     var rouge = parcours.cibles[index].rouge;
     var bleu = parcours.cibles[index].bleu;
     var blanc = parcours.cibles[index].blanc;
