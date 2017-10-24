@@ -1,12 +1,3 @@
-li span {
-  color: black; /* text color */
-}
-
-#distances ul{list-style-type:none;}
-#distances ul li{display:inline;}
-.ui-input-text{width:100%;}
-#distances img {vertical-align:super;}
-
 .dist_rouge {
     display:inline-block;
     background-image: url('../img/rouge.png');

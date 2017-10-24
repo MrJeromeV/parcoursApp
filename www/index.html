@@ -50,7 +50,6 @@ under the License.
 <title>Parcours</title>
 </head>
 <body>
-    <div class="appZ">
         <div data-role="page" id="accueil">
 
             <div data-role="panel" id="option_panel" data-position="left" data-display="overlay" data-theme="a">
@@ -78,52 +77,71 @@ under the License.
                 <h1>Choix du parcours</h1>
             </div>
             <div class="ui-content">
-            <select id="select_parcours" nom="select_parcours">
-            </select>
-            <a id="edit_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
-            <a href="#popup_newparcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Nouveau Parcours</a>
-            <a href="#option_panel" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
-        </div>
-    </div>
-
-    <div data-role="page" id="parcours" data-theme="a">
-
-        <div data-role="panel" id="cible_panel" data-position="left" data-display="overlay" data-theme="a" data-dismissible="false" data-swipe-close="false">
-            <h2>CIBLE <span id="cible_num"></span></h2>
-            <select id='select_categorie'>
-            </select>
-            <div id="distances" class="ui-field-contain">
-                <input type='number' id='dist_rouge' min='5' max='40' class='red_input'/>
-                <input type='number' id='dist_bleu' min='5' max='35' class='red_input'/>
-                <input type='number' id='dist_blanc' min='5' max='30' class='red_input'/>
+                <select id="select_parcours" nom="select_parcours">
+                </select>
+                <a id="edit_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
+                <a href="#popup_newparcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Nouveau Parcours</a>
+                <a href="#option_panel" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
             </div>
-            <p id="info_cible"></p>
-            <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
-            <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
-            <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
+
         </div>
 
-        <div data-role="header">
-            <h1 id="edit_header">Two</h1>
+        <div data-role="page" id="parcours" data-theme="a">
+
+            <div data-role="panel" id="cible_panel" data-position="left" data-display="overlay" data-theme="a" data-dismissible="false" data-swipe-close="false" style="overflow:auto; position: fixed;">
+                <h2>CIBLE <span id="cible_num"></span></h2>
+                <select id='select_categorie'>
+                </select>
+                <div id="distances" class="ui-field-contain">
+                    <input type='number' id='dist_rouge' min='5' max='40' class='red_input'/>
+                    <input type='number' id='dist_bleu' min='5' max='35' class='red_input'/>
+                    <input type='number' id='dist_blanc' min='5' max='30' class='red_input'/>
+                </div>
+                <p id="info_cible"></p>
+                <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
+                <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
+                <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
+            </div>
+
+            <div data-role="popup" id="saveMenu">
+                <ul data-role="listview" data-inset="true" style="width:180px;" data-theme="b">
+                    <li><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver</a></li>
+                    <li><a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Fermer</a></li>
+                </ul>
+            </div>
+
+            <div data-role="header" data-position="fixed">
+                <h1 id="edit_header"></h1>
+                <!--<a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-btn-left">Sauver</a>
+                <a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-btn-right">Fermer</a>-->
+                <a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-btn-right" href="#saveMenu" data-rel="popup">Menu</a>
+            </div>
+            <div role="main" class="ui-content" id="cibles">
+                <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='a'>
+                </ul>
+            </div>
+            <div data-role="footer" data-type="footer" data-position="fixed">
+                <div class="ui-grid-b">
+                    <div class="ui-block-a">
+                        <div class="ui-bar ui-bar-a">Total rouge</div>
+                        <div id='total_rouge' class="ui-bar ui-bar-a"></div>
+                    </div>
+                    <div class="ui-block-b">
+                        <div class="ui-bar ui-bar-a">Total bleu</div>
+                        <div id='total_bleu' class="ui-bar ui-bar-a"></div>
+                    </div>
+                    <div class="ui-block-c">
+                        <div class="ui-bar ui-bar-a">Total blanc</div>
+                        <div id='total_blanc' class="ui-bar ui-bar-a"></div>
+                    </div>
+                </div>
+                <div class="ui-grid-solo">
+                    <div class="ui-block-a"><div id='info_types' class="ui-bar ui-bar-a"></div></div>
+                </div>
+
+            </div>
         </div>
-        <div role="main" class="ui-content" id="cibles">
-            <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='a'></ul>
-            <div class="ui-grid-b">
-                <div class="ui-block-a"><div class="ui-bar ui-bar-a">Total rouge</div>
-                <div id='total_rouge' class="ui-bar ui-bar-a"></div></div>
-                <div class="ui-block-b"><div class="ui-bar ui-bar-a">Total bleu</div>
-                <div id='total_bleu' class="ui-bar ui-bar-a"></div></div>
-                <div class="ui-block-c"><div class="ui-bar ui-bar-a">Total blanc</div>
-                <div id='total_blanc' class="ui-bar ui-bar-a"></div></div>
-            </div>
-            <div class="ui-grid-solo">
-                <div class="ui-block-a"><div id='info_types' class="ui-bar ui-bar-a"></div></div>
-            </div>
-            <p><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Sauver</a>
-                <a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Fermer</a></p>
-            </div>
-        </div>
-    </div>
+
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/jquery-1.11.1.min.js" id="cordova-jquery"></script>
