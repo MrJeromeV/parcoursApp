@@ -1,6 +1,6 @@
 var parcours;
 
-function Cible(categorie, rouge, bleu, blanc) {
+function Cible(categorie ='', rouge='', bleu='', blanc='') {
     this.categorie = categorie;
     this.rouge = rouge;
     this.bleu = bleu;
@@ -44,7 +44,7 @@ function addParcours(nom, type)
     var nbCibles = typeParcoursMap.get(type).nbCibles;
     for(var i=0;i<nbCibles;i++)
     {
-        var cible = new Cible('GG', 35, 25, 15);
+        var cible = new Cible();
         parcours.cibles.push(cible);
     }
     var json = JSON.stringify(parcours);
@@ -59,9 +59,15 @@ function confirmChangeCible()
     var numCible = $("#cible_num").html();
     var index = numCible -1;
     var categorie = $("#select_categorie").val();
+    if(categorie == null) {
+        categorie = "";
+    }
     var rouge = $("#dist_rouge").val();
     var bleu = $("#dist_bleu").val();
     var blanc = $("#dist_blanc").val();
+
+    //var diffCat = !(parcours.cibles[index].categorie == categorie);
+    //var diffRouge = parcours.cibles[index].rouge != rouge;
 
     if(parcours.cibles[index].categorie != categorie || parcours.cibles[index].rouge != rouge || parcours.cibles[index].bleu != bleu || parcours.cibles[index].blanc != blanc )
     {
@@ -79,6 +85,7 @@ function editCible(numCible)
     $("#dist_bleu").val(parcours.cibles[index].bleu);
     $("#dist_blanc").val(parcours.cibles[index].blanc);
     $('#select_categorie').selectmenu('refresh');
+    $('#info_cible').html( $("#info_"+numCible ).val());
     $("#cible_panel").panel("open");
 }
 
@@ -90,6 +97,13 @@ function fillPage()
     for(var i=0;i<cibles.length;i++)
     {
         var cible = cibles[i];
+        var categorie = cible.categorie;
+        var nomCategorie = '';
+        if (categoriesMap.has(categorie))
+        {
+            nomCategorie = categoriesMap.get(categorie).nom;
+        }
+        //if(categorie != null)
         var n=i+1;
         $("#liste_cibles").append("<li><a id='cible_link_"+n+"''>"
         +"<h2>"+n+"</h2>"
@@ -98,7 +112,8 @@ function fillPage()
         +"<li class='bluedot'><span id='bleu_"+n+"'>" + cible.bleu + "</span></li>"
         +"<li class='whitedot'><span id='blanc_"+n+"'>" + cible.blanc + "</span></li>"
         +"</ul></div>"
-        +"<p class='ui-li-aside'><strong><span id='cat_"+n+"'>"+categoriesMap.get(cible.categorie).nom+"</span> "+n+"</strong></p>"
+        +"<input type='hidden' id='info_"+n+"'></input>"
+        +"<p class='ui-li-aside'><strong><span id='cat_"+n+"'>"+nomCategorie+"</span> <span id='numcat_"+n+"'></span></strong></p>"
         +"</a></li>");
     }
     $("[id^=cible_link_]").click(function(){
@@ -108,6 +123,7 @@ function fillPage()
         }
     });
     $("#liste_cibles").listview( "refresh" );
+    verifParcours();
 }
 
 function fillSelects() {
@@ -203,6 +219,123 @@ function setValidators()
     );
 }
 
+function verifCible(index)
+{
+    var categorie = parcours.cibles[index].categorie;
+    if(categorie == '') return;
+    var rouge = parcours.cibles[index].rouge;
+    var bleu = parcours.cibles[index].bleu;
+    var blanc = parcours.cibles[index].blanc;
+
+    var message = "";
+
+    var maxRouge = categoriesMap.get(categorie).maxRouge;
+    var minRouge = categoriesMap.get(categorie).minRouge;
+    var maxBleu = categoriesMap.get(categorie).maxBleu;
+    var maxBlanc = categoriesMap.get(categorie).maxBlanc;
+
+    if(rouge > maxRouge) {
+        message += "Distance au pas rouge > "+maxRouge+"m !<br>";
+    }
+    if(rouge < minRouge) {
+        message += "Distance au pas rouge < "+minRouge+"m !<br>";
+    }
+    if(bleu > maxBleu) {
+        message += "Distance au pas bleu > "+maxBleu+"m !<br>";
+    }
+    if(blanc > maxBlanc) {
+        message += "Distance au pas blanc > "+maxBlanc+"m !<br>";
+    }
+    if((rouge - bleu) > 7 ) {
+        message += "Pas rouge à plus de 7m du pas bleu !<br>";
+    }
+    if((bleu - blanc) > 7 ) {
+        message += "Pas bleu à plus de 7m du pas blanc !<br>";
+    }
+    if((rouge - bleu) < 0 ) {
+        message += "Pas bleu derriere le pas rouge !<br>";
+    }
+    if((bleu - blanc) < 0 ) {
+        message += "Pas blanc derrière le pas bleu !<br>";
+    }
+    var i = index + 1;
+    $("#info_"+i).val(message);
+    if(message.length > 0) {
+        $("#cible_link_"+i).buttonMarkup({ icon: "alert" });
+    } else {
+        $("#cible_link_"+i).buttonMarkup({ icon: "carat-r" });
+    }
+}
+
+function verifParcours()
+{
+    var countGG = 0;
+    var countMG = 0;
+    var countPG = 0;
+    var countPA = 0;
+    var totalRouge = 0;
+    var totalBleu = 0;
+    var totalBlanc = 0;
+    for (var i = 0;i<21;i++)
+    {
+        var categorie = parcours.cibles[i].categorie;
+        //if(categorie == '') return;
+        var rouge = parcours.cibles[i].rouge;
+        var bleu = parcours.cibles[i].bleu;
+        var blanc = parcours.cibles[i].blanc;
+        totalRouge += Number(rouge);
+        totalBleu += Number(bleu);
+        totalBlanc += Number(blanc);
+        var num = i+1;
+        if(categorie == 'GG')
+        {
+            countGG ++;
+            $("#numcat_"+num).html(countGG);
+        }
+        if(categorie == 'MG')
+        {
+            countMG ++;
+            $("#numcat_"+num).html(countMG);
+        }
+        if(categorie == 'PG')
+        {
+            countPG ++;
+            $("#numcat_"+num).html(countPG);
+        }
+        if(categorie == 'PA')
+        {
+            countPA ++;
+            $("#numcat_"+num).html(countPA);
+        }
+        verifCible(i);
+    }
+    var message = "";
+    if(countGG > 4) {
+        message += "Plus de 4 Gros Gibiers !<br>";
+    }
+    if(countMG > 7) {
+        message += "Plus de 7 Moyens Gibiers !<br>";
+    }
+    if(countPG > 6) {
+        message += "Plus de 6 Petits Gibiers !<br>";
+    }
+    if(countPA > 4) {
+        message += "Plus de 4 Petits Animaux !<br>";
+    }
+    if (totalRouge > 550)
+    {
+        message += "Total au pas rouge > 550m !<br>";
+    }
+    if (totalRouge < 525)
+    {
+        message += "Total au pas rouge < 525m !<br>";
+    }
+    $("#info_types").html(message);
+    $("#total_rouge").html(totalRouge);
+    $("#total_bleu").html(totalBleu);
+    $("#total_blanc").html(totalBlanc);
+}
+
 fillSelects();
 loadParcoursList();
 setValidators();
@@ -231,12 +364,15 @@ $("#close_newparcours_dialog").click(function(){
 });
 
 $("#button_cible_ok").click(function(){
-    saveCible()
+    saveCible();
+    verifParcours();
     $("#cible_panel").panel("close");
 });
 
 $("#button_cible_appliquer").click(function(){
     saveCible();
+    verifParcours();
+    editCible($("#cible_num").html());
 });
 
 $("#button_save_parcours").click(function() {
