@@ -53,12 +53,11 @@ under the License.
     <div class="appZ">
         <div data-role="page" id="accueil">
 
-            <!-- panel to reveal -->
             <div data-role="panel" id="option_panel" data-position="left" data-display="overlay" data-theme="a">
                 <h2>Options</h2>
                 <a id="button_clear_base" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Vider la base</a>
                 <a id="button_delete_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Effacer le parcours sélectionné</a>
-            </div><!-- /panel -->
+            </div>
 
             <div data-role="popup" id="popup_newparcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
                 <div style="padding:10px 20px;">
@@ -68,8 +67,6 @@ under the License.
                         <input name="newparcours_nom" id="newparcours_nom" value="" placeholder="nom" data-theme="a" type="text" required>
                         <label for="select_newparcours_type" class="ui-hidden-accessibleZ">Type de parcours:</label>
                         <select id='select_newparcours_type' nom='select_newparcours_type' data-theme='a'>
-                            <!--<option value="nat21">Nature 21 cibles</option>
-                            <option value="nat42">Nature 42 cibles</option>-->
                         </select>
                     </form>
                     <a id='close_newparcours_dialog' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
@@ -79,30 +76,21 @@ under the License.
 
             <div data-role="header">
                 <h1>Choix du parcours</h1>
-            </div><!-- /header -->
-
+            </div>
             <div class="ui-content">
-                <!--<div id="page1">
-            -->
             <select id="select_parcours" nom="select_parcours">
             </select>
             <a id="edit_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
             <a href="#popup_newparcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Nouveau Parcours</a>
             <a href="#option_panel" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
-            <!--</div>-->
-        </div><!-- /content -->
-    </div><!-- /page -->
+        </div>
+    </div>
 
-    <!-- Start of second page: #two -->
     <div data-role="page" id="parcours" data-theme="a">
 
         <div data-role="panel" id="cible_panel" data-position="left" data-display="overlay" data-theme="a" data-dismissible="false" data-swipe-close="false">
             <h2>CIBLE <span id="cible_num"></span></h2>
             <select id='select_categorie'>
-                <!--<option value="GG">Gros Gibier</option>
-                <option value="MG">Moyen Gibier</option>
-                <option value="PG">Petit Gibier</option>
-                <option value="PA">Petit Animal</option>-->
             </select>
             <ul>
                 <li class='reddot'><span><input type='number' id='dist_rouge' min='0' max='40'></input></span></li>
@@ -117,24 +105,24 @@ under the License.
 
         <div data-role="header">
             <h1 id="edit_header">Two</h1>
-        </div><!-- /header -->
+        </div>
         <div role="main" class="ui-content" id="cibles">
             <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='a'></ul>
-            <div class="ui-grid-c">
-                <div class="ui-block-a"><div class="ui-bar ui-bar-a">Parcours</div>
-                <div id='info_types' class="ui-bar ui-bar-a"></div></div>
-                <div class="ui-block-b"><div class="ui-bar ui-bar-a">Total rouge</div>
+            <div class="ui-grid-b">
+                <div class="ui-block-a"><div class="ui-bar ui-bar-a">Total rouge</div>
                 <div id='total_rouge' class="ui-bar ui-bar-a"></div></div>
-                <div class="ui-block-c"><div class="ui-bar ui-bar-a">Total bleu</div>
+                <div class="ui-block-b"><div class="ui-bar ui-bar-a">Total bleu</div>
                 <div id='total_bleu' class="ui-bar ui-bar-a"></div></div>
-                <div class="ui-block-d"><div class="ui-bar ui-bar-a">Total blanc</div>
+                <div class="ui-block-c"><div class="ui-bar ui-bar-a">Total blanc</div>
                 <div id='total_blanc' class="ui-bar ui-bar-a"></div></div>
+            </div>
+            <div class="ui-grid-solo">
+                <div class="ui-block-a"><div id='info_types' class="ui-bar ui-bar-a"></div></div>
             </div>
             <p><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Sauver</a>
                 <a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Fermer</a></p>
-            </div><!-- /content -->
+            </div>
         </div>
-
     </div>
 
     <script type="text/javascript" src="cordova.js"></script>
