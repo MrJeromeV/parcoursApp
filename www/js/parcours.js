@@ -377,6 +377,28 @@ $("#button_cible_appliquer").click(function(){
     editCible($("#cible_num").html());
 });
 
+$("#button_menu").click(function() {
+    var json = JSON.stringify(parcours);
+    var saved = localStorage.getItem(parcours.nom);
+    if (json == saved) {
+        $("#button_save_parcours").closest('.ui-btn').hide();
+        $("#button_saveclose_parcours").closest('.ui-btn').hide();
+    } else {
+        $("#button_save_parcours").closest('.ui-btn').show();
+        $("#button_saveclose_parcours").closest('.ui-btn').show();
+    }
+    $("#saveMenu").css({position:'fixed',top:'40px',right:'0px'}).popup("open");
+});
+
 $("#button_save_parcours").click(function() {
     localStorage.setItem(parcours.nom, JSON.stringify(parcours));
+});
+
+$("#button_saveclose_parcours").click(function() {
+    localStorage.setItem(parcours.nom, JSON.stringify(parcours));
+    window.location.href = '#accueil';
+});
+
+$("#button_close_parcours").click(function() {
+    window.location.href = '#accueil';
 });

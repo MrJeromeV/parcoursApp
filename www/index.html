@@ -103,18 +103,18 @@ under the License.
                 <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
             </div>
 
-            <div data-role="popup" id="saveMenu">
-                <ul data-role="listview" data-inset="true" style="width:180px;" data-theme="b">
+            <div data-role="popup" id="saveMenu" data-position-to="window">
+                <ul data-role="listview" data-inset="true" data-theme="b">
                     <li><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver</a></li>
-                    <li><a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Fermer</a></li>
+                    <li><a id="button_saveclose_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver et fermer</a></li>
+                    <li><a id="button_close_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Fermer</a></li>
                 </ul>
             </div>
 
+
             <div data-role="header" data-position="fixed">
                 <h1 id="edit_header"></h1>
-                <!--<a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-btn-left">Sauver</a>
-                <a href="#accueil" data-direction="reverse" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-btn-right">Fermer</a>-->
-                <a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-btn-right" href="#saveMenu" data-rel="popup">Menu</a>
+                <a class="ui-btn ui-icon-bars ui-shadow ui-corner-all ui-btn-b ui-btn-right ui-btn-icon-notext ui-nodisc-icon" id="button_menu"></a>
             </div>
             <div role="main" class="ui-content" id="cibles">
                 <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='a'>
