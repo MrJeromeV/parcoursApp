@@ -1,5 +1,7 @@
 var parcours;
 var scrollTop;
+var compassWatchID;
+var gpsWatchID;
 
 function Cible(categorie ='', rouge='', bleu='', blanc='') {
     this.categorie = categorie;
@@ -88,6 +90,62 @@ function editCible(numCible)
     $('#select_categorie').selectmenu('refresh');
     $('#info_cible').html( $("#info_"+numCible ).val());
     $("#cible_panel").panel("open");
+}
+
+function exportParcours(nom)
+{
+    var fileName = nom + ".json";
+    var parcoursStr = localStorage.getItem(nom);
+    saveFile(fileName, parcoursStr);
+}
+
+function exportParcoursKML(nom)
+{
+    var fileName = nom + ".kml";
+    var parcoursStr = localStorage.getItem(nom);
+    var kmlStr =
+    '<?xml version="1.0" encoding="UTF-8"?>'
+     + '<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">'
+     + '<Document> <name>' + fileName + '</name>'
+     + '<open>1</open><Folder><name>' + nom + '</name><open>1</open>';
+
+    parcours = JSON.parse(parcoursStr);
+    var cibles = parcours.cibles;
+    for(var i=0;i<cibles.length;i++)
+    {
+        var cible = cibles[i];
+        var categorie = cible.categorie;
+        var nomCategorie = '';
+        if (categoriesMap.has(categorie))
+        {
+            nomCategorie = categoriesMap.get(categorie).nom;
+        }
+        var lat = cible.latitude;
+        var long = cible.longitude;
+        var axe = cible.axe;
+
+
+        if(lat != null && long != null && axe != null)
+        {
+            var num = i+1;
+            var longAxe = 0.000009 * 100;
+            var lat2 = Number(lat) + longAxe * Math.cos(cible.axe* (Math.PI / 180));
+            var long2 = Number(long) + longAxe * Math.sin(cible.axe* (Math.PI / 180));
+
+            kmlStr +=
+            '<Placemark><name>'
+            + 'Cible ' + num
+            + '</name><Point><coordinates>'
+            + long + ',' + lat + ',0'
+            + '</coordinates></Point></Placemark>'
+            + '<Placemark><name>axe ' + num + '</name><LineString><coordinates>'
+            + long + ',' + lat + ',0 ' + long2 + ',' + lat2 + ',0'
+            + '</coordinates></LineString></Placemark>'
+        }
+    }
+    kmlStr += '</Folder></Document></kml>';
+    saveFile(fileName, kmlStr);
+
 }
 
 function fillPage()
@@ -196,6 +254,9 @@ function saveCible()
     parcours.cibles[index].rouge = rouge;
     parcours.cibles[index].bleu = bleu;
     parcours.cibles[index].blanc = blanc;
+    parcours.cibles[index].longitude = $("#long").val();
+    parcours.cibles[index].latitude = $("#lat").val();
+    parcours.cibles[index].axe = $("#axe").val();
 
     $("#rouge_" + numCible).html(rouge);
     $("#bleu_" + numCible).html(bleu);
@@ -204,6 +265,23 @@ function saveCible()
         $("#cat_" + numCible).html(categoriesMap.get(categorie).nom);
     }
     $("#liste_cibles").listview( "refresh" );
+}
+
+function saveFile(fileName, data)
+{
+    window.resolveLocalFileSystemURL( cordova.file.externalRootDirectory, function( directoryEntry ) {
+        directoryEntry.getFile(fileName, { create: true }, function( fileEntry ) {
+            fileEntry.createWriter( function( fileWriter ) {
+                fileWriter.onwriteend = function( result ) {
+                    console.log( 'done.' );
+                };
+                fileWriter.onerror = function( error ) {
+                    console.log( error );
+                };
+                fileWriter.write( data );
+            }, function( error ) { console.log( error ); } );
+        }, function( error ) { console.log( error ); } );
+    }, function( error ) { console.log( error ); } );
 }
 
 function setValidators()
@@ -368,6 +446,16 @@ $("#button_delete_parcours").click(function(){
     loadParcoursList();
 });
 
+$("#button_export_parcours").click(function(){
+    var nom = $('#select_parcours').val();
+    exportParcours(nom);
+});
+
+$("#button_exportkml_parcours").click(function(){
+    var nom = $('#select_parcours').val();
+    exportParcoursKML(nom);
+});
+
 $("#close_newparcours_dialog").click(function(){
     $("#form_newparcours").submit();
 });
@@ -382,6 +470,41 @@ $("#button_cible_appliquer").click(function(){
     saveCible();
     verifParcours();
     editCible($("#cible_num").html());
+});
+
+function onSuccessCompass(heading) {
+    $("#cibleAxe").html(Math.round(heading.magneticHeading));
+};
+
+function onErrorCompass(compassError) {
+    alert('Compass error: ' + compassError.code);
+};
+
+function onSuccessGps(position) {
+    $("#cibleLong").html(position.coords.longitude);
+    $("#cibleLat").html(position.coords.latitude);
+
+}
+
+function onErrorGps(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
+
+$("#button_cible_geol").click(function(){
+    $("#cibleGeol").popup("open");
+    compassWatchID = navigator.compass.watchHeading(onSuccessCompass, onErrorCompass);
+    gpsWatchID = navigator.geolocation.watchPosition(onSuccessGps, onErrorGps, { enableHighAccuracy: true });
+});
+
+$("#button_ok_geol").click(function(){
+    $("#long").val($("#cibleLong").html());
+    $("#lat").val($("#cibleLat").html());
+    $("#axe").val($("#cibleAxe").html());
+    $("#cibleGeol").popup("close");
+    navigator.geolocation.clearWatch(gpsWatchID);
+    navigator.compass.clearWatch(compassWatchID);
+
 });
 
 $("#button_menu").click(function() {

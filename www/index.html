@@ -56,6 +56,8 @@ under the License.
                 <h2>Options</h2>
                 <a id="button_clear_base" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Vider la base</a>
                 <a id="button_delete_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Effacer le parcours sélectionné</a>
+                <a id="button_export_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Exporter le parcours sélectionné</a>
+                <a id="button_exportkml_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Exporter le parcours sélectionné (kml)</a>
             </div>
 
             <div data-role="popup" id="popup_newparcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
@@ -96,8 +98,13 @@ under the License.
                     <input type='number' id='dist_rouge' min='5' max='40' class='red_input'/>
                     <input type='number' id='dist_bleu' min='5' max='35' class='red_input'/>
                     <input type='number' id='dist_blanc' min='5' max='30' class='red_input'/>
+                    <input type='hidden' id='long'/>
+                    <input type='hidden' id='lat'/>
+                    <input type='hidden' id='axe'/>
+
                 </div>
                 <p id="info_cible"></p>
+                <a id="button_cible_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Position et direction</a>
                 <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
                 <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
                 <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
@@ -111,6 +118,14 @@ under the License.
                 </ul>
             </div>
 
+            <div data-role="popup" id="cibleGeol" data-position-to="window" data-dismissible="false" style="width:250px;">
+                <ul data-role="listview" data-inset="true" data-theme="a">
+                    <li>Longitude:<span id="cibleLong"></span></li>
+                    <li>Latitude:<span id="cibleLat"></span></li>
+                    <li>Axe:<span id="cibleAxe"></span></li>
+                    <li><a id="button_ok_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a></li>
+                </ul>
+            </div>
 
             <div data-role="header" data-position="fixed">
                 <h1 id="edit_header"></h1>
