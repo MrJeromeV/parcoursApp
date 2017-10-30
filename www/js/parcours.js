@@ -1,4 +1,5 @@
 var parcours;
+var scrollTop;
 
 function Cible(categorie ='', rouge='', bleu='', blanc='') {
     this.categorie = categorie;
@@ -114,12 +115,18 @@ function fillPage()
         +"</ul></div>"
         +"<input type='hidden' id='info_"+n+"'></input>"
         +"<p class='ui-li-aside'><strong><span id='cat_"+n+"'>"+nomCategorie+"</span> <span id='numcat_"+n+"'></span></strong></p>"
+        +"<span class='ui-li-count'>"+n+"</span>"
         +"</a></li>");
     }
     $("[id^=cible_link_]").click(function(){
         if(confirmChangeCible()) {
             var num = jQuery(this).attr("id").substring(11);
+            scrollTop = $('body').scrollTop();
+            if(scrollTop == 0) {
+                scrollTop = $('html').scrollTop();
+            }
             editCible(num);
+            $.mobile.silentScroll(scrollTop);
         }
     });
     $("#liste_cibles").listview( "refresh" );
