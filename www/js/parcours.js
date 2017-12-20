@@ -69,9 +69,6 @@ function confirmChangeCible()
     var bleu = $("#dist_bleu").val();
     var blanc = $("#dist_blanc").val();
 
-    //var diffCat = !(parcours.cibles[index].categorie == categorie);
-    //var diffRouge = parcours.cibles[index].rouge != rouge;
-
     if(parcours.cibles[index].categorie != categorie || parcours.cibles[index].rouge != rouge || parcours.cibles[index].bleu != bleu || parcours.cibles[index].blanc != blanc )
     {
         return false;
@@ -87,6 +84,7 @@ function editCible(numCible)
     $("#dist_rouge").val(parcours.cibles[index].rouge);
     $("#dist_bleu").val(parcours.cibles[index].bleu);
     $("#dist_blanc").val(parcours.cibles[index].blanc);
+    $("#blason").val(parcours.cibles[index].blason);
     $('#select_categorie').selectmenu('refresh');
     $('#info_cible').html( $("#info_"+numCible ).val());
     $("#cible_panel").panel("open");
@@ -97,6 +95,12 @@ function exportParcours(nom)
     var fileName = nom + ".json";
     var parcoursStr = localStorage.getItem(nom);
     saveFile(fileName, parcoursStr);
+    // var objJsonB64 = new Buffer(parcoursStr).toString("base64");
+    //
+    // cordova.plugins.email.open({
+    //     subject: 'Parcours '+ nom,
+    //     attachments: 'base64:' + fileName + '//' + objJsonB64
+    // });
 }
 
 function exportParcoursKML(nom)
@@ -208,6 +212,10 @@ function fillSelects() {
     }
 }
 
+function importParcours()
+{
+
+}
 
 function loadParcours()
 {
@@ -257,6 +265,7 @@ function saveCible()
     parcours.cibles[index].longitude = $("#long").val();
     parcours.cibles[index].latitude = $("#lat").val();
     parcours.cibles[index].axe = $("#axe").val();
+    parcours.cibles[index].blason = $("#blason").val();
 
     $("#rouge_" + numCible).html(rouge);
     $("#bleu_" + numCible).html(bleu);
@@ -269,7 +278,20 @@ function saveCible()
 
 function saveFile(fileName, data)
 {
-    window.resolveLocalFileSystemURL( cordova.file.externalRootDirectory, function( directoryEntry ) {
+    dir = cordova.file.externalRootDirectory;
+    if (dir == null) {
+        //dir = "file:///persistent";
+        dir = "cdvfile://localhost/temporary";
+    }
+    window.resolveLocalFileSystemURL( dir, function( directoryEntry ) {
+        saveFileD(directoryEntry, fileName, data);
+    }, function( error ) {
+        console.log( error );
+    } );
+}
+
+function saveFileD(directoryEntry, fileName, data)
+{
         directoryEntry.getFile(fileName, { create: true }, function( fileEntry ) {
             fileEntry.createWriter( function( fileWriter ) {
                 fileWriter.onwriteend = function( result ) {
@@ -281,8 +303,8 @@ function saveFile(fileName, data)
                 fileWriter.write( data );
             }, function( error ) { console.log( error ); } );
         }, function( error ) { console.log( error ); } );
-    }, function( error ) { console.log( error ); } );
 }
+
 
 function setValidators()
 {
@@ -432,8 +454,13 @@ $("#button_newparcours_close").click(function(){
 });
 
 $("#button_clear_base").click(function(){
-    localStorage.clear();
-    loadParcoursList();
+    navigator.notification.confirm("Vider la base ?", function(buttonIndex) {
+        if(buttonIndex==1) {
+        localStorage.clear();
+        loadParcoursList();
+    }
+    },
+"Confirmation", ["Oui", "Non"]);
 });
 
 $("#edit_parcours").click(function(){
@@ -442,13 +469,24 @@ $("#edit_parcours").click(function(){
 
 $("#button_delete_parcours").click(function(){
     var nom = $('#select_parcours').val();
-    localStorage.removeItem(nom);
-    loadParcoursList();
+    if (nom != null) {
+    navigator.notification.confirm("Effacer le parcours " + nom + " ?", function(buttonIndex) {
+        if(buttonIndex==1) {
+        localStorage.removeItem(nom);
+        loadParcoursList();
+    }
+    },
+"Confirmation", ["Oui", "Non"]);
+}
 });
 
 $("#button_export_parcours").click(function(){
     var nom = $('#select_parcours').val();
     exportParcours(nom);
+});
+
+$("#button_import_parcours").click(function(){
+    importParcours();
 });
 
 $("#button_exportkml_parcours").click(function(){
@@ -492,9 +530,44 @@ function onErrorGps(error) {
 }
 
 $("#button_cible_geol").click(function(){
+    $("#cibleLong").html('');
+    $("#cibleLat").html('');
+    $("#cibleAxe").html('');
     $("#cibleGeol").popup("open");
     compassWatchID = navigator.compass.watchHeading(onSuccessCompass, onErrorCompass);
     gpsWatchID = navigator.geolocation.watchPosition(onSuccessGps, onErrorGps, { enableHighAccuracy: true });
+});
+
+$("#button_cible_blason").click(function(){
+    $("#select_blason").html('');
+    var categorie = $("#select_categorie").val();
+    if(categorie == 'GG')
+    {
+        tab = TabGG;
+    }
+    if(categorie == 'MG')
+    {
+        tab = TabMG;
+    }
+    if(categorie == 'PG')
+    {
+        tab = TabPG;
+    }
+    if(categorie == 'PA')
+    {
+        tab = TabPA;
+    }
+    for(var i=0;i<tab.length;i++)
+    {
+        $("#select_blason").append("<option value='"+tab[i]+"'>"+tab[i]+"</option>");
+    }
+    $("#select_blason").change(function() {
+        value = $("#select_blason").val();
+        src = "img/ams/" + categorie + "/mini/" + value + ".jpg";
+        $("#blason_image").attr("src",src);
+    });
+    $("#select_blason").val($("#blason").val());
+    $("#cibleBlason").popup("open");
 });
 
 $("#button_ok_geol").click(function(){
@@ -505,6 +578,38 @@ $("#button_ok_geol").click(function(){
     navigator.geolocation.clearWatch(gpsWatchID);
     navigator.compass.clearWatch(compassWatchID);
 
+});
+
+function jsonpCallback(json) {
+    var j = json;
+    var p = json;
+    $("#popup_import_parcours").popup("open");
+}
+
+ $("#import_parcours").click(function(){
+
+//     $.getJSON("http://ummagumma.org/parcours/list2.php?callback=?",function(json){
+//   console.log(json);
+// });
+
+
+    $.ajax({
+
+		type : "GET",
+		//url : 'http://ummagumma.org/parcours/list2.php',
+        url : 'http://ummagumma.org/parcours/json.json',
+		dataType : 'jsonp',
+		jsonpCallback : 'jsonpCallback',
+		error : function() {
+			alert("Errr is occured");
+		}
+	});
+
+});
+
+$("#button_ok_blason").click(function(){
+    $("#blason").val($("#select_blason").val());
+    $("#cibleBlason").popup("close");
 });
 
 $("#button_menu").click(function() {

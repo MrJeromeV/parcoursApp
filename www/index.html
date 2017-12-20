@@ -28,7 +28,9 @@ under the License.
     * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
     * Enable inline JS: add 'unsafe-inline' to default-src
 -->
+<!--
 <meta http-equiv="Content-Security-Policy" content="default-src &apos;self&apos; data: gap: https://ssl.gstatic.com &apos;unsafe-eval&apos;; style-src &apos;self&apos; &apos;unsafe-inline&apos;; media-src *; img-src &apos;self&apos; data: content:;">
+-->
 <meta name="format-detection" content="telephone=no">
 <meta name="msapplication-tap-highlight" content="no">
 <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -58,6 +60,7 @@ under the License.
                 <a id="button_delete_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Effacer le parcours sélectionné</a>
                 <a id="button_export_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Exporter le parcours sélectionné</a>
                 <a id="button_exportkml_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Exporter le parcours sélectionné (kml)</a>
+                <a id="button_import_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Importer un parcours</a>
             </div>
 
             <div data-role="popup" id="popup_newparcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
@@ -75,6 +78,19 @@ under the License.
                 </div>
             </div>
 
+            <div data-role="popup" id="popup_import_parcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
+                <div style="padding:10px 20px;">
+                    <h3>Importer un parcours</h3>
+                    <form id="form_newparcours">
+                        <label for="newparcours_nom" class="ui-hidden-accessibleZ">Nom:</label>
+                        <select id='select_importparcours' nom='select_importparcours' data-theme='a'>
+                        </select>
+                    </form>
+                    <a id='close_importparcours_dialog' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
+                    <a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
+                </div>
+            </div>
+
             <div data-role="header">
                 <h1>Choix du parcours</h1>
             </div>
@@ -83,6 +99,7 @@ under the License.
                 </select>
                 <a id="edit_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
                 <a href="#popup_newparcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Nouveau Parcours</a>
+                <a id="import_parcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Import Parcours</a>
                 <a href="#option_panel" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
             </div>
 
@@ -101,10 +118,12 @@ under the License.
                     <input type='hidden' id='long'/>
                     <input type='hidden' id='lat'/>
                     <input type='hidden' id='axe'/>
+                    <input type='hidden' id='blason'/>
 
                 </div>
                 <p id="info_cible"></p>
                 <a id="button_cible_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Position et direction</a>
+                <a id="button_cible_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Blason</a>
                 <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
                 <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
                 <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
@@ -112,6 +131,9 @@ under the License.
 
             <div data-role="popup" id="saveMenu" data-position-to="window">
                 <ul data-role="listview" data-inset="true" data-theme="b">
+                    <li><a id="button_export_json" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en json</a></li>
+                    <li><a id="button_export_csv" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en CSV</a></li>
+                    <li><a id="button_export_kml" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en KML</a></li>
                     <li><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver</a></li>
                     <li><a id="button_saveclose_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver et fermer</a></li>
                     <li><a id="button_close_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Fermer</a></li>
@@ -124,6 +146,15 @@ under the License.
                     <li>Latitude:<span id="cibleLat"></span></li>
                     <li>Axe:<span id="cibleAxe"></span></li>
                     <li><a id="button_ok_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a></li>
+                </ul>
+            </div>
+
+            <div data-role="popup" id="cibleBlason" data-position-to="window" data-dismissible="false" style="width:250px;">
+                <ul data-role="listview" data-inset="true" data-theme="a">
+                    <img id="blason_image"/>
+                    <select id='select_blason'>
+                    </select>
+                    <li><a id="button_ok_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a></li>
                 </ul>
             </div>
 
@@ -170,6 +201,7 @@ under the License.
     </script><script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js">
     </script><script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/parcours.js"></script>
+    <script type="text/javascript" src="js/ams.js"></script>
     <script id="paneljs">
     $(function() {
         try{$( "body>[data-role=\'panel\']" ).panel();}catch(e){}
