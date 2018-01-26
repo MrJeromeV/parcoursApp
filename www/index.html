@@ -57,10 +57,9 @@ under the License.
             <div data-role="panel" id="option_panel" data-position="left" data-display="overlay" data-theme="a">
                 <h2>Options</h2>
                 <a id="button_clear_base" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Vider la base</a>
+                <a id="button_rename_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Renommer le parcours sélectionné</a>
                 <a id="button_delete_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Effacer le parcours sélectionné</a>
                 <a id="button_export_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Export (serveur)</a>
-                <a id="button_exportkml_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Export (kml)</a>
-                <a id="button_import_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Importer un parcours</a>
             </div>
 
             <div data-role="popup" id="popup_newparcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
@@ -73,21 +72,34 @@ under the License.
                         <select id='select_newparcours_type' nom='select_newparcours_type' data-theme='a'>
                         </select>
                     </form>
-                    <a id='close_newparcours_dialog' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
-                    <a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
+                    <a id='button_ok_newparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
+                    <a id='button_cancel_newparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
+                </div>
+            </div>
+
+            <div data-role="popup" id="popup_renameparcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
+                <div style="padding:10px 20px;">
+                    <h3>Nouveau nom</h3>
+                    <form id="form_renameparcours">
+                        <label for="parcours_newnom" class="ui-hidden-accessibleZ">Nom:</label>
+                        <input name="parcours_newnom" id="parcours_newnom" value="" placeholder="nom" data-theme="a" type="text" required>
+                        </select>
+                    </form>
+                    <a id='button_ok_renameparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
+                    <a id='button_cancel_renameparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
                 </div>
             </div>
 
             <div data-role="popup" id="popup_import_parcours" data-theme="a" class="ui-corner-all" data-dismissible="false">
                 <div style="padding:10px 20px;">
                     <h3>Importer un parcours</h3>
-                    <form id="form_newparcours">
+                    <form id="form_importparcours">
                         <label for="newparcours_nom" class="ui-hidden-accessibleZ">Nom:</label>
                         <select id='select_importparcours' nom='select_importparcours' data-theme='a'>
                         </select>
                     </form>
-                    <a id='close_importparcours_dialog' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
-                    <a data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
+                    <a id='button_ok_importparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">OK</a>
+                    <a id='button_cancel_importparcours' class="ui-btn ui-corner-all ui-shadow ui-btn-b">Annuler</a>
                 </div>
             </div>
 
@@ -97,10 +109,10 @@ under the License.
             <div class="ui-content">
                 <select id="select_parcours" nom="select_parcours">
                 </select>
-                <a id="edit_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
-                <a href="#popup_newparcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Nouveau Parcours</a>
-                <a id="import_parcours" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-a" data-transition="pop">Import Parcours</a>
-                <a href="#option_panel" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
+                <a id="button_open_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Ouvrir</a>
+                <a id="button_new_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Nouveau Parcours</a>
+                <a id="button_import_parcours" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Import Parcours</a>
+                <a id="button_options" class="ui-btn ui-corner-all ui-shadow ui-btn-a">Options</a>
             </div>
 
         </div>
@@ -108,7 +120,13 @@ under the License.
         <div data-role="page" id="parcours" data-theme="a">
 
             <div data-role="panel" id="cible_panel" data-position="left" data-display="overlay" data-theme="a" data-dismissible="false" data-swipe-close="false" style="overflow:auto; position: fixed;">
-                <h2>CIBLE <span id="cible_num"></span></h2>
+                <!--<div id="num_cible">Cible <span id="cible_num"></span></div>-->
+
+                        <h2>Cible <span id="cible_num"></span></h2>
+                        <a id="button_cible_ok" class="ui-btn ui-icon-check ui-shadow ui-btn-inline ui-corner-all ui-btn-b ui-btn-icon-notext ui-naodisc-icon"></a>
+                        <a id="button_cible_appliquer" class="ui-btn ui-icon-recycle ui-shadow ui-btn-inline ui-corner-all ui-btn-b ui-btn-icon-notext ui-naodisc-icon"></a>
+                        <a id="button_cible_cancel" class="ui-btn ui-icon-delete ui-shadow ui-btn-inline ui-corner-all ui-btn-b ui-btn-icon-notext ui-naodisc-icon"></a>
+
                 <select id='select_categorie'>
                 </select>
                 <div id="distances" class="ui-field-contain">
@@ -124,16 +142,14 @@ under the License.
                 <p id="info_cible"></p>
                 <a id="button_cible_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Position et direction</a>
                 <a id="button_cible_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Blason</a>
-                <a id="button_cible_ok" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
+<!--
+                <a id="button_cible_ok2" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
                 <a id="button_cible_appliquer" class="ui-btn ui-shadow ui-corner-all ui-btn-a">APPLIQUER</a>
-                <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a>
+                <a href="#parcours" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a">ANNULER</a> -->
             </div>
 
             <div data-role="popup" id="saveMenu" data-position-to="window">
                 <ul data-role="listview" data-inset="true" data-theme="b">
-                    <li><a id="button_export_json" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en json</a></li>
-                    <li><a id="button_export_csv" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en CSV</a></li>
-                    <li><a id="button_export_kml" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Export en KML</a></li>
                     <li><a id="button_save_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver</a></li>
                     <li><a id="button_saveclose_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Sauver et fermer</a></li>
                     <li><a id="button_close_parcours" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Fermer</a></li>
@@ -146,21 +162,33 @@ under the License.
                     <li>Latitude:<span id="cibleLat"></span></li>
                     <li>Axe:<span id="cibleAxe"></span></li>
                     <li><a id="button_ok_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a></li>
+                    <li><a id="button_cancel_geol" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Annuler</a></li>
                 </ul>
             </div>
 
-            <div data-role="popup" id="cibleBlason" data-position-to="window" data-dismissible="false" style="width:250px;">
-                <ul data-role="listview" data-inset="true" data-theme="a">
-                    <center><img id="blason_image"/></center>
-                    <select id='select_blason'>
-                    </select>
-                    <li><a id="button_ok_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a></li>
+            <div data-role="popup" id="cibleBlason" data-position-to="window" data-dismissible="false" style="width:300px;">
+                    <center><img id="image_blason1"/></center>
+                    <div data-role="controlgroup" data-type="horizontal" style="width:100%;">
+                        <a id="button_prev_blason1" class="ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all">prev</a>
+                        <select id='select_blason1'></select>
+                        <a id="button_next_blason1" class="ui-btn ui-icon-carat-r ui-btn-icon-notext ui-corner-all">next</a>
+                    </div>
+                    <div id="group_blason2">
+                    <center><img id="image_blason2"/></center>
+                    <div data-role="controlgroup" data-type="horizontal" style="width:100%;">
+                        <a id="button_prev_blason2" class="ui-btn ui-icon-carat-l ui-btn-icon-notext ui-corner-all">prev</a>
+                        <select id='select_blason2'></select>
+                        <a id="button_next_blason2" class="ui-btn ui-icon-carat-r ui-btn-icon-notext ui-corner-all">next</a>
+                    </div>
+                </div>
+                    <a id="button_ok_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">OK</a>
+                    <a id="button_cancel_blason" class="ui-btn ui-shadow ui-corner-all ui-btn-a">Annuler</a>
                 </ul>
             </div>
 
             <div data-role="header" data-position="fixed">
                 <h1 id="edit_header"></h1>
-                <a class="ui-btn ui-icon-bars ui-shadow ui-corner-all ui-btn-b ui-btn-right ui-btn-icon-notext ui-nodisc-icon" id="button_menu"></a>
+                <a id="button_menu_parcours" class="ui-btn ui-icon-bars ui-shadow ui-corner-all ui-btn-b ui-btn-right ui-btn-icon-notext ui-nodisc-icon"></a>
             </div>
             <div role="main" class="ui-content" id="cibles">
                 <ul data-role="listview" data-inset="true" id="liste_cibles" data-theme='a'>
@@ -201,6 +229,7 @@ under the License.
     </script><script type="text/javascript" src="js/jquery-1.5.0.mobile.min.js">
     </script><script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/parcours.js"></script>
+    <script type="text/javascript" src="js/buttons.js"></script>
     <script type="text/javascript" src="js/ams.js"></script>
     <script id="paneljs">
     $(function() {

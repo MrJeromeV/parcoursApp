@@ -31,6 +31,11 @@ var app = {
         document.addEventListener("backbutton", function (e) {
             e.preventDefault();
         }, false);
+
+        fillSelects();
+        loadParcoursList();
+        setValidators();
+        initButtons();
     }
 
     // // Update DOM on a Received Event

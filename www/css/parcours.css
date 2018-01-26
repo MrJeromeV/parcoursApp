@@ -46,3 +46,7 @@
     background-position: 8px;
     background-size: 5px 18px;
 }
+#num_cible {
+    font-size: 1.2em;
+￼    font-weight: bolder;
+}
