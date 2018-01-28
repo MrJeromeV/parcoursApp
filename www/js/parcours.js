@@ -514,6 +514,40 @@ function cancelImport() {
     $("#popup_import_parcours").popup("close");
 }
 
+function getTab(categorie) {
+  var tab = null;
+  if(categorie == 'GG') {
+      tab = TabGG;
+  }
+  if(categorie == 'MG') {
+      tab = TabMG;
+  }
+  if(categorie == 'PG') {
+      tab = TabPG;
+  }
+  if(categorie == 'PA') {
+      tab = TabPA;
+  }
+  return tab;
+}
+
+function getTabDist(categorie) {
+  var tabDist = null;
+  if(categorie == 'GG') {
+      tabDist = TabDistIdGG;
+  }
+  if(categorie == 'MG') {
+      tabDist = TabDistIdMG;
+  }
+  if(categorie == 'PG') {
+      tabDist = TabDistIdPG;
+  }
+  if(categorie == 'PA') {
+      tabDist = TabDistIdPA;
+  }
+  return tabDist;
+}
+
 function openPopupBlason() {
     $("#select_blason1").html('');
     $("#select_blason1").val('');
@@ -524,22 +558,12 @@ function openPopupBlason() {
     $('#select_blason2').selectmenu('refresh');
     $("#image_blason2").attr("src",'');
     var categorie = $("#select_categorie").val();
-    var tab = null;
-    if(categorie == 'GG') {
-        tab = TabGG;
-        $("#group_blason2").hide();
-    }
-    if(categorie == 'MG') {
-        tab = TabMG;
-        $("#group_blason2").hide();
-    }
-    if(categorie == 'PG') {
-        tab = TabPG;
-        $("#group_blason2").hide();
-    }
+    var tab = getTab(categorie);
+    var tabDist = getTabDist(categorie);
     if(categorie == 'PA') {
-        tab = TabPA;
         $("#group_blason2").show();
+    } else  {
+        $("#group_blason2").hide();
     }
     if(tab != null) {
         var blason = $("#blason").val();
@@ -559,22 +583,32 @@ function openPopupBlason() {
             $('#select_blason1').selectmenu('refresh');
             src = "img/ams/" + categorie + "/mini/" + blason + ".jpg";
             $("#image_blason1").attr("src",src);
+            var selectedIndex = $("#select_blason1").prop('selectedIndex');
+            $("#distance_blason1").html(tabDist[selectedIndex]);
         }
         if (blason2 != null && tab.includes(blason2)) {
             $("#select_blason2").val(blason2);
             $('#select_blason2').selectmenu('refresh');
             src = "img/ams/" + categorie + "/mini/" + blason2 + ".jpg";
             $("#image_blason2").attr("src",src);
+            var selectedIndex = $("#select_blason2").prop('selectedIndex');
+            $("#distance_blason2").html(tabDist[selectedIndex]);
         }
         $("#select_blason1").change(function() {
             value = $("#select_blason1").val();
             src = "img/ams/" + categorie + "/mini/" + value + ".jpg";
             $("#image_blason1").attr("src",src);
+            $("#distance_blason1").html(value);
+            var selectedIndex = $("#select_blason1").prop('selectedIndex');
+            $("#distance_blason1").html(tabDist[selectedIndex]);
         });
         $("#select_blason2").change(function() {
             value = $("#select_blason2").val();
             src = "img/ams/" + categorie + "/mini/" + value + ".jpg";
             $("#image_blason2").attr("src",src);
+            $("#distance_blason2").html(value);
+            var selectedIndex = $("#select_blason1").prop('selectedIndex');
+            $("#distance_blason1").html(tabDist[selectedIndex]);
         });
         //$("#select_blason").val($("#blason").val());
         // $("#cibleBlason").popup({
@@ -589,21 +623,27 @@ function nextBlason(n) {
     var selectedIndex = $("#select_blason"+n).prop('selectedIndex');
     var valToSelect = $('#select_blason' +n+'  :nth-child(' + (selectedIndex+2) + ')').val();
     var categorie = $("#select_categorie").val();
+    var tab = getTab(categorie);
+    var tabDist = getTabDist(categorie);
     src = "img/ams/" + categorie + "/mini/" + valToSelect + ".jpg";
     $("#image_blason"+n).attr("src",src);
     $("#select_blason"+n).val(valToSelect);
     $('#select_blason'+n).selectmenu('refresh');
+    $("#distance_blason"+n).html(tabDist[selectedIndex+1]);
 }
 
 function prevBlason(n) {
     var selectedIndex = $("#select_blason"+n).prop('selectedIndex');
     if(selectedIndex > 0) {
-        var categorie = $("#select_categorie").val();
+      var categorie = $("#select_categorie").val();
+      var tab = getTab(categorie);
+      var tabDist = getTabDist(categorie);
         var valToSelect = $('#select_blason'+n+' :nth-child(' + selectedIndex + ')').val();
         src = "img/ams/" + categorie + "/mini/" + valToSelect + ".jpg";
         $("#image_blason"+n).attr("src",src);
         $("#select_blason"+n).val(valToSelect);
         $('#select_blason'+n).selectmenu('refresh');
+        $("#distance_blason"+n).html(tabDist[selectedIndex-1]);
     }
 }
 
