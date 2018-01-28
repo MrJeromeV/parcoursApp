@@ -621,15 +621,17 @@ function openPopupBlason() {
 
 function nextBlason(n) {
     var selectedIndex = $("#select_blason"+n).prop('selectedIndex');
-    var valToSelect = $('#select_blason' +n+'  :nth-child(' + (selectedIndex+2) + ')').val();
     var categorie = $("#select_categorie").val();
     var tab = getTab(categorie);
-    var tabDist = getTabDist(categorie);
-    src = "img/ams/" + categorie + "/mini/" + valToSelect + ".jpg";
-    $("#image_blason"+n).attr("src",src);
-    $("#select_blason"+n).val(valToSelect);
-    $('#select_blason'+n).selectmenu('refresh');
-    $("#distance_blason"+n).html(tabDist[selectedIndex+1]);
+    if(selectedIndex < tab.length -1) {
+      var valToSelect = $('#select_blason' +n+'  :nth-child(' + (selectedIndex+2) + ')').val();
+      var tabDist = getTabDist(categorie);
+      src = "img/ams/" + categorie + "/mini/" + valToSelect + ".jpg";
+      $("#image_blason"+n).attr("src",src);
+      $("#select_blason"+n).val(valToSelect);
+      $('#select_blason'+n).selectmenu('refresh');
+      $("#distance_blason"+n).html(tabDist[selectedIndex+1]);
+    }
 }
 
 function prevBlason(n) {
