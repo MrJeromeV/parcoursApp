@@ -132,11 +132,17 @@ function fillPage()
         +"<div style='float: left; width:60%;'><input type='hidden' id='info_"+n+"'></input>"
         +"<p class='ui-li-asideZ'><strong><span id='cat_"+n+"'>"+nomCategorie+"</span> <span id='numcat_"+n+"'></span><br>"
         +"<span id='blason_"+n+"'>"+cible.blason.replace(';','<br>')+"</span></strong></p>"
-        +"</div></div>"
+        +"</div>"
+        +"</div>"
         +"<span class='ui-li-count'>"+n+"</span>"
-        +"</a></li>");
+        +"</a>"
+        +"<div><a id='up_"+n+"' class='ui-btn ui-icon-carat-u ui-shadow ui-btn-inline ui-corner-all ui-btn-b ui-btn-icon-notext ui-naodisc-icon'></a>"
+        +     "<a id='down_"+n+"' class='ui-btn ui-icon-carat-d ui-shadow ui-btn-inline ui-corner-all ui-btn-b ui-btn-icon-notext ui-naodisc-icon'></a></div>"
+        +"</li>");
     }
     $("[id^=cible_link_]").click(changeCible);
+    $("[id^=up_]").click( cibleUp );
+    $("[id^=down_]").click( cibleDown );
     $("#liste_cibles").listview( "refresh" );
     verifParcours();
 }
@@ -205,14 +211,34 @@ function saveCible() {
     parcours.cibles[index].axe = axe;
     parcours.cibles[index].blason = blason;
 
+    // $("#rouge_" + numCible).html(rouge);
+    // $("#bleu_" + numCible).html(bleu);
+    // $("#blanc_" + numCible).html(blanc);
+    // if(categorie != null) {
+    //     $("#cat_" + numCible).html(categoriesMap.get(categorie).nom);
+    // }
+    // $("#blason_" + numCible).html(blason.replace(';','<br>'));
+    // $("#liste_cibles").listview( "refresh" );
+
+    refreshCible(numCible);
+}
+
+function refreshCible(numCible) {
+    var index = numCible -1;
+    var rouge = parcours.cibles[index].rouge;
+    var categorie = parcours.cibles[index].categorie;
+
     $("#rouge_" + numCible).html(rouge);
-    $("#bleu_" + numCible).html(bleu);
-    $("#blanc_" + numCible).html(blanc);
-    if(categorie != null) {
+    $("#bleu_" + numCible).html(parcours.cibles[index].bleu);
+    $("#blanc_" + numCible).html(parcours.cibles[index].blanc);
+    if(categorie != null && categorie.length > 0) {
         $("#cat_" + numCible).html(categoriesMap.get(categorie).nom);
+    } else {
+        $("#cat_" + numCible).html('');
     }
-    $("#blason_" + numCible).html(blason.replace(';','<br>'));
+    $("#blason_" + numCible).html(parcours.cibles[index].blason.replace(';','<br>'));
     $("#liste_cibles").listview( "refresh" );
+
 }
 
 function setValidators() {
@@ -250,8 +276,13 @@ function setValidators() {
 }
 
 function verifCible(index) {
+    var i = index + 1;
     var categorie = parcours.cibles[index].categorie;
-    if(categorie == '' || categorie == null) return;
+    if(categorie == '' || categorie == null) {
+        $("#info_"+i).val(message);
+        $("#cible_link_"+i).buttonMarkup({ icon: "carat-r" });
+        return;
+    }
     var rouge = parcours.cibles[index].rouge;
     var bleu = parcours.cibles[index].bleu;
     var blanc = parcours.cibles[index].blanc;
@@ -287,7 +318,6 @@ function verifCible(index) {
     if((bleu - blanc) < 0 ) {
         message += "Pas blanc derrière le pas bleu !<br>";
     }
-    var i = index + 1;
     $("#info_"+i).val(message);
     if(message.length > 0) {
         $("#cible_link_"+i).buttonMarkup({ icon: "alert" });
@@ -314,25 +344,20 @@ function verifParcours() {
         totalBleu += Number(bleu);
         totalBlanc += Number(blanc);
         var num = i+1;
-        if(categorie == 'GG')
-        {
+        if(categorie == 'GG') {
             countGG ++;
             $("#numcat_"+num).html(countGG);
-        }
-        if(categorie == 'MG')
-        {
+        } else if(categorie == 'MG') {
             countMG ++;
             $("#numcat_"+num).html(countMG);
-        }
-        if(categorie == 'PG')
-        {
+        } else if(categorie == 'PG') {
             countPG ++;
             $("#numcat_"+num).html(countPG);
-        }
-        if(categorie == 'PA')
-        {
+        } else if(categorie == 'PA') {
             countPA ++;
             $("#numcat_"+num).html(countPA);
+        } else {
+            $("#numcat_"+num).html('');
         }
         verifCible(i);
     }
@@ -662,6 +687,60 @@ function cancelBlason() {
     $("#cibleBlason").popup("close");
 }
 
+function cibleUp() {
+    var num = jQuery(this).attr("id").substring(3);
+    if (num > 1) {
+        permutCible(num-1, num-2);
+        refreshCible(num);
+        refreshCible(num-1);
+    }
+    verifParcours();
+}
+
+function cibleDown() {
+    var num = jQuery(this).attr("id").substring(5);
+    if (num < 21) {
+        permutCible(num-1, num);
+        refreshCible(num);
+        refreshCible(parseInt(num)+1);
+        verifParcours();
+    }
+}
+
+function permutCible(c1, c2) {
+    var categorie = parcours.cibles[c1].categorie;
+    parcours.cibles[c1].categorie = parcours.cibles[c2].categorie;
+    parcours.cibles[c2].categorie = categorie;
+
+    var rouge = parcours.cibles[c1].rouge;
+    parcours.cibles[c1].rouge = parcours.cibles[c2].rouge;
+    parcours.cibles[c2].rouge = rouge;
+
+    var bleu = parcours.cibles[c1].bleu;
+    parcours.cibles[c1].bleu = parcours.cibles[c2].bleu;
+    parcours.cibles[c2].bleu = bleu;
+
+    var blanc = parcours.cibles[c1].blanc;
+    parcours.cibles[c1].blanc = parcours.cibles[c2].blanc;
+    parcours.cibles[c2].blanc = blanc;
+
+    var blason = parcours.cibles[c1].blason;
+    parcours.cibles[c1].blason = parcours.cibles[c2].blason;
+    parcours.cibles[c2].blason = blason;
+
+    var longitude = parcours.cibles[c1].longitude;
+    parcours.cibles[c1].longitude = parcours.cibles[c2].longitude;
+    parcours.cibles[c2].longitude = longitude;
+
+    var latitude = parcours.cibles[c1].latitude;
+    parcours.cibles[c1].latitude = parcours.cibles[c2].latitude;
+    parcours.cibles[c2].latitude = latitude;
+
+    var axe = parcours.cibles[c1].axe;
+    parcours.cibles[c1].axe = parcours.cibles[c2].axe;
+    parcours.cibles[c2].axe = axe;
+}
+
 function openMenuParcours() {
     var json = JSON.stringify(parcours);
     var saved = localStorage.getItem(parcours.nom);
@@ -681,6 +760,7 @@ function openMenuParcours() {
 
 function saveParcours() {
     localStorage.setItem(parcours.nom, JSON.stringify(parcours));
+    $("#saveMenu").popup("close");
 }
 
 function closeParcours(save) {
